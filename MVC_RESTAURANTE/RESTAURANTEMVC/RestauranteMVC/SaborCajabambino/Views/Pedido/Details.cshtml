@@ -1,0 +1,68 @@
+﻿@model SaborCajabambino.Models.Pedido
+
+@{
+    ViewData["Title"] = "Detalles del Pedido";
+}
+
+<div class="main-content-container">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+
+            <div class="mb-4">
+                <h1 class="text-white">Detalles del Pedido</h1>
+                <p class="text-white-50">Información completa del pedido registrado.</p>
+            </div>
+
+            <div class="card bg-dark-card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center d-flex flex-column justify-content-center align-items-center border-end-md">
+                            <i class="fas fa-receipt fa-6x text-info mb-3"></i>
+                            <h4 class="text-white">Pedido #@Model.IdPedido</h4>
+                            <p class="text-white-50">01/02/2025</p>
+                            <span class="badge bg-success">Completado</span>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="p-3">
+                                <h5 class="text-white-50 mb-3 border-bottom pb-2">Información Principal</h5>
+                                <dl class="details-list">
+                                    <dt>Cliente ID</dt>
+                                    <dd>1</dd>
+
+                                    <dt>Empleado ID</dt>
+                                    <dd>1</dd>
+
+                                    <dt>Mesa</dt>
+                                    <dd>3</dd>
+
+                                    <dt>Hora</dt>
+                                    <dd>10:00</dd>
+                                </dl>
+
+                                <h5 class="text-white-50 mb-3 mt-4 border-bottom pb-2">Detalles Adicionales</h5>
+                                <dl class="details-list">
+                                    <dt>Tipo de Pedido</dt>
+                                    <dd>Atención en local</dd>
+
+                                    <dt>Dirección de Entrega</dt>
+                                    <dd>Sin dirección</dd>
+
+                                    <dt>Comentarios</dt>
+                                    <dd>Primer pedido garantizado para cliente 1. Fin de semana.</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-end mt-4">
+                <a asp-action="Index" class="btn btn-secondary me-2"><i class="fas fa-arrow-left me-2"></i>Volver</a>
+                <a asp-action="Edit" asp-route-id="@Model?.IdPedido" class="btn btn-primary"><i class="fas fa-pencil-alt me-2"></i>Editar</a>
+            </div>
+
+        </div>
+    </div>
+</div>

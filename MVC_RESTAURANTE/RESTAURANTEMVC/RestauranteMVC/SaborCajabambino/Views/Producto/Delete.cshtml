@@ -1,0 +1,73 @@
+﻿@model SaborCajabambino.Models.Producto
+
+@{
+    ViewData["Title"] = "Eliminar Producto";
+}
+
+<div class="main-content-container">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+
+            <div class="text-center mb-4 p-3 rounded" style="background-color: rgba(220, 53, 69, 0.2);">
+                <h1 class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Eliminar Producto</h1>
+                <p class="text-white-50">Estás a punto de eliminar permanentemente este producto. Esta acción no se puede deshacer.</p>
+            </div>
+
+            <div class="card bg-dark-card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center d-flex flex-column justify-content-center align-items-center border-end-md">
+                            <img src="@Model.Foto" alt="Imagen del producto" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover; border: 3px solid #dc3545;" />
+                            <h4 class="text-white">@Model.Nombre</h4>
+                            <span class="badge bg-secondary">ID: @Model.IdProducto</span>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="p-3">
+                                <h5 class="text-white-50 mb-3 border-bottom pb-2">Resumen del Producto</h5>
+                                <dl class="details-list">
+                                    <dt>Nombre</dt>
+                                    <dd>@Model.Nombre</dd>
+
+                                    <dt>Categoría</dt>
+                                    <dd>@Model.IdCategoriaNavigation.Nombre</dd>
+
+                                    <dt>Precio</dt>
+                                    <dd>@Model.Precio.ToString("C")</dd>
+
+                                    <dt>¿Es Preparado?</dt>
+                                    <dd>
+                                        @if (Model.EsPreparado == true)
+                                        {
+                                            <span class="badge bg-success">Sí</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">No</span>
+                                        }
+                                    </dd>
+
+                                    <dt>Descripción</dt>
+                                    <dd>@(String.IsNullOrEmpty(Model.Descripcion) ? "Sin descripción" : Model.Descripcion)</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="Delete" class="text-end mt-4">
+                <input type="hidden" asp-for="IdProducto" />
+
+                <a asp-action="Index" class="btn btn-secondary me-2">
+                    <i class="fas fa-times me-2"></i>Cancelar y Volver
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt me-2"></i>Eliminar Producto
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>

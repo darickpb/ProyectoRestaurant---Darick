@@ -1,0 +1,88 @@
+﻿@model SaborCajabambino.Models.Reserva
+
+@{
+    ViewData["Title"] = "Editar Reserva";
+}
+
+<div class="main-content-container">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="IdReserva" />
+
+                <div class="text-center mb-4">
+                    <h1 class="text-white">Editar Reserva</h1>
+                    <p class="text-white-50">Modifica los detalles de la reserva y guarda los cambios.</p>
+                </div>
+
+                <div class="card bg-dark-card">
+                    <div class="card-header">
+                        <i class="fas fa-calendar-alt me-2"></i>Detalles de la Reserva
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="IdCliente" class="control-label"></label>
+                                <select asp-for="IdCliente" class="form-control form-control-dark" asp-items="ViewBag.IdCliente"></select>
+                                <span asp-validation-for="IdCliente" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="IdMesa" class="control-label"></label>
+                                <select asp-for="IdMesa" class="form-control form-control-dark" asp-items="ViewBag.IdMesa"></select>
+                                <span asp-validation-for="IdMesa" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Fecha" class="control-label"></label>
+                                <input asp-for="Fecha" class="form-control form-control-dark" type="date" />
+                                <span asp-validation-for="Fecha" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Hora" class="control-label"></label>
+                                <input asp-for="Hora" class="form-control form-control-dark" type="time" />
+                                <span asp-validation-for="Hora" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NumeroPersonas" class="control-label"></label>
+                                <input asp-for="NumeroPersonas" class="form-control form-control-dark" type="number" />
+                                <span asp-validation-for="NumeroPersonas" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Estado" class="control-label"></label>
+                                <select asp-for="Estado" class="form-control form-control-dark">
+                                    <option value="Pendiente">Pendiente</option>
+                                    <option value="Confirmada">Confirmada</option>
+                                    <option value="Cancelada">Cancelada</option>
+                                    <option value="Completada">Completada</option>
+                                </select>
+                                <span asp-validation-for="Estado" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Comentarios" class="control-label"></label>
+                            <textarea asp-for="Comentarios" class="form-control form-control-dark" rows="3" placeholder="Anotaciones o solicitudes especiales..."></textarea>
+                            <span asp-validation-for="Comentarios" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-end mt-4">
+                    <a asp-action="Index" class="btn btn-secondary me-2">Cancelar y Volver</a>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Guardar Cambios</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

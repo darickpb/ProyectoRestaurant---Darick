@@ -1,0 +1,63 @@
+﻿@model SaborCajabambino.Models.Pedido
+
+@{
+    ViewData["Title"] = "Eliminar Pedido";
+}
+
+<div class="main-content-container">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+
+            <div class="text-center mb-4 p-3 rounded" style="background-color: rgba(220, 53, 69, 0.2);">
+                <h1 class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Eliminar Pedido</h1>
+                <p class="text-white-50">Estás a punto de eliminar permanentemente este pedido. Revisa los detalles antes de confirmar.</p>
+            </div>
+
+            <div class="card bg-dark-card">
+                <div class="card-header">
+                    <i class="fas fa-receipt me-2"></i>Resumen del Pedido a Eliminar - ID: @Model.IdPedido
+                </div>
+                <div class="card-body">
+                    <dl class="details-list">
+                        <dt>Fecha / Hora</dt>
+                        <dd>01/02/2025 a las 10:00</dd>
+
+                        <dt>Cliente ID</dt>
+                        <dd>1</dd>
+
+                        <dt>Empleado ID</dt>
+                        <dd>1</dd>
+
+                        <dt>Mesa</dt>
+                        <dd>3</dd>
+
+                        <dt>Estado</dt>
+                        <dd><span class="badge bg-success">Completado</span></dd>
+
+                        <dt>Tipo de Pedido</dt>
+                        <dd>Atención en local</dd>
+
+                        <dt>Dirección de Entrega</dt>
+                        <dd>Sin dirección</dd>
+
+                        <dt>Comentarios</dt>
+                        <dd>Primer pedido garantizado para cliente 1. Fin de semana.</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <form asp-action="Delete" class="text-end mt-4">
+                <input type="hidden" asp-for="IdPedido" />
+
+                <a asp-action="Index" class="btn btn-secondary me-2">
+                    <i class="fas fa-times me-2"></i>Cancelar y Volver
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt me-2"></i>Eliminar Pedido
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>

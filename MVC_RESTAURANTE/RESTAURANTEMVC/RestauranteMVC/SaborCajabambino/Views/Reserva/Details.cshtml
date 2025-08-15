@@ -1,0 +1,62 @@
+﻿@model SaborCajabambino.Models.Reserva
+
+@{
+    ViewData["Title"] = "Detalles de la Reserva";
+}
+
+<div class="main-content-container">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+
+            <div class="mb-4">
+                <h1 class="text-white">Detalles de la Reserva</h1>
+                <p class="text-white-50">Información completa de la reserva registrada.</p>
+            </div>
+
+            <div class="card bg-dark-card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center d-flex flex-column justify-content-center align-items-center border-end-md">
+                            <i class="fas fa-calendar-check fa-6x text-info mb-3"></i>
+                            <h4 class="text-white">Reserva #@Model.IdReserva</h4>
+                            <p class="text-white-50">@($"{Model.IdClienteNavigation.Nombres} {Model.IdClienteNavigation.ApellidoPaterno} {Model.IdClienteNavigation.ApellidoMaterno}")</p>
+                            <span class="badge bg-success">@Model.Estado</span>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="p-3">
+                                <h5 class="text-white-50 mb-3 border-bottom pb-2">Información de la Cita</h5>
+                                <dl class="details-list">
+                                    <dt>Fecha</dt>
+                                    <dd>@Model.Fecha.ToShortDateString()</dd>
+
+                                    <dt>Hora</dt>
+                                    <dd>@Model.Hora</dd>
+
+                                    <dt>Mesa</dt>
+                                    <dd>Mesa N° @Model.IdMesaNavigation.IdMesa</dd>
+
+                                    <dt>N° de Personas</dt>
+                                    <dd>@Model.NumeroPersonas</dd>
+                                </dl>
+
+                                <h5 class="text-white-50 mb-3 mt-4 border-bottom pb-2">Detalles Adicionales</h5>
+                                <dl class="details-list">
+                                    <dt>Comentarios</dt>
+                                    <dd>@(String.IsNullOrEmpty(Model.Comentarios) ? "Ninguno" : Model.Comentarios)</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-end mt-4">
+                <a asp-action="Index" class="btn btn-secondary me-2"><i class="fas fa-arrow-left me-2"></i>Volver</a>
+                <a asp-action="Edit" asp-route-id="@Model?.IdReserva" class="btn btn-primary"><i class="fas fa-pencil-alt me-2"></i>Editar</a>
+            </div>
+
+        </div>
+    </div>
+</div>

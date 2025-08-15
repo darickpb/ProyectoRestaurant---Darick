@@ -1,0 +1,84 @@
+﻿@model IEnumerable<SaborCajabambino.Models.PedidoMargenViewModel>
+
+@{
+    ViewData["Title"] = "Reporte de Márgenes";
+}
+
+<!-- Contenedor principal con el fondo oscuro -->
+<div class="main-content-container">
+
+    <!-- Encabezado y barra de herramientas -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="text-white mb-1">Reporte de Márgenes</h1>
+            <p class="text-muted mb-0">Análisis de la rentabilidad por cada producto vendido.</p>
+        </div>
+        <!-- Barra de búsqueda -->
+        <div class="input-group" style="max-width: 400px;">
+            <span class="input-group-text"><i class="fas fa-search"></i></span>
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar por cliente o producto...">
+        </div>
+    </div>
+
+    <!-- Contenedor para la tabla con scroll vertical -->
+    <div class="table-responsive-md" style="max-height: 70vh; overflow-y: auto;">
+        <table class="table table-hover">
+            <thead class="sticky-top">
+                <tr>
+                    <th>Cliente</th>
+                    <th>Producto</th>
+                    <th>Empleado</th>
+                    <th>Mesa</th>
+                    <th>Precio Venta</th>
+                    <th>Costo Total</th>
+                    <th>Margen</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Cliente</td>
+                        <td>@item.Nombre</td>
+                        <td>@item.Empleado</td>
+                        <td>@item.Mesa</td>
+                        <td>
+                            <span class="badge bg-primary">@item.PrecioVentaTotal.ToString("C")</span>
+                        </td>
+                        <td>
+                            <span class="badge bg-warning text-dark">@item.CostoTotal.ToString("C")</span>
+                        </td>
+                        <td>
+                            <span class="badge @(item.Margen > 0 ? "bg-success" : "bg-danger")">
+                                @item.Margen.ToString("C")
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Script de búsqueda simple para filtrar la tabla en el navegador
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("searchInput");
+            const tableRows = document.querySelectorAll("tbody tr");
+
+            searchInput.addEventListener("keyup", function (event) {
+                const searchTerm = event.target.value.toLowerCase();
+
+                tableRows.forEach(row => {
+                    const rowText = row.innerText.toLowerCase();
+                    if (rowText.includes(searchTerm)) {
+                        row.style.display = ""; // Muestra la fila
+                    } else {
+                        row.style.display = "none"; // Oculta la fila
+                    }
+                });
+            });
+        });
+    </script>
+}

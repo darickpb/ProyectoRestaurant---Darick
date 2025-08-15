@@ -1,0 +1,52 @@
+﻿@model IEnumerable<SaborCajabambino.Models.Mesa>
+
+@{
+    ViewData["Title"] = "Gestión de Mesas";
+}
+
+<!-- Contenedor principal para dar fondo y legibilidad -->
+<div class="main-content-container">
+
+    <!-- TU ENCABEZADO Y LEYENDA ORIGINALES -->
+    <h2 class="mb-1 text-white">Gestión de Mesas</h2>
+    <p class="text-muted mb-4">Vista rápida del estado y la gestión de las mesas.</p>
+
+    <div class="d-flex status-legend mb-4">
+        <div class="legend-item"><div class="legend-color" style="background-color: #28a745;"></div><span>Disponible</span></div>
+        <div class="legend-item"><div class="legend-color" style="background-color: #ffc107;"></div><span>Ocupada</span></div>
+        <div class="legend-item"><div class="legend-color" style="background-color: deepskyblue;"></div><span>Reservada</span></div>
+        <div class="legend-item"><div class="legend-color" style="background-color: #dc3545;"></div><span>Mantenimiento</span></div>
+    </div>
+    <!-- FIN DE TU ENCABEZADO Y LEYENDA -->
+    <!-- Contenedor de las mesas -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex flex-wrap justify-content-start">
+                @foreach (var item in Model)
+                {
+                    string statusClass = "";
+                    switch (item.Estado)
+                    {
+                        case "Mantenimiento": statusClass = "maintenance"; break;
+                        case "Ocupada": statusClass = "occupied"; break;
+                        case "Reservada": statusClass = "reserved"; break;
+                        default: statusClass = "available"; break;
+                    }
+
+                    <div class="d-flex flex-column align-items-center me-4 mb-4">
+                        <!-- Círculo que funciona como enlace a la vista Details -->
+                        <a asp-action="Details" asp-route-id="@item.IdMesa" class="table-circle @statusClass numero">
+                            @item.IdMesa
+                        </a>
+
+                        <!-- Botones de acción debajo del círculo -->
+                        <div class="table-actions mt-2">
+                            <a asp-action="Edit" asp-route-id="@item.IdMesa" class="btn btn-sm btn-info" title="Editar"><i class="fas fa-pencil-alt"></i></a>
+                            <a asp-action="Delete" asp-route-id="@item.IdMesa" class="btn btn-sm btn-danger" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

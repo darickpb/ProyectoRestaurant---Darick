@@ -1,0 +1,163 @@
+﻿@model IEnumerable<SaborCajabambino.Models.Inventario>
+
+@{
+    ViewData["Title"] = "Inventario";
+}
+
+<div class="main-content-container">
+
+    <h1 class="text-white mb-4">Gestión de Inventario</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="input-group" style="max-width: 400px;">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Buscar por nombre, unidad o categoría...">
+                </div>
+
+                <a asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus-circle"></i> Agregar Item
+                </a>
+            </div>
+
+            <div class="table-responsive-md" style="max-height: 550px; overflow-y: auto;">
+                <table class="table table-hover">
+                    <thead class="sticky-top">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Stock</th>
+                            <th>Unidad</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.ItemNombre)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Stock)</td>
+                                <td>@Html.DisplayFor(modelItem => item.UnidadMedida)</td>
+                                <td>
+                                    @if (item.Stock <= item.NivelReorden)
+                                    {
+                                        <span class="badge bg-warning text-dark">Bajo Stock</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">En Stock</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" class="btn btn-sm btn-info" asp-route-id="@item.IdItem" title="Editar"><i class="fas fa-pencil-alt"></i></a>
+                                    <a href="javascript:void(0);" onclick="cargarDetalle(@item.IdItem)" class="btn btn-sm btn-secondary" title="Ver Detalles"><i class="fas fa-info-circle"></i></a>
+                                    <a asp-action="Delete" class="btn btn-sm btn-danger" asp-route-id="@item.IdItem" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div id="detalleInventario" class="sticky-top" style="top: 20px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    // Tu código para simplificar el modelo para el caché de JS
+    var inventarioSimple = Model.Select(i => new
+    {
+        idItem = i.IdItem,
+        itemNombre = i.ItemNombre,
+        stock = i.Stock,
+        unidadMedida = i.UnidadMedida,
+        nivelReorden = i.NivelReorden,
+        idItemCategoriaNavigation = i.IdItemCategoriaNavigation == null ? null : new
+        {
+            categoria = i.IdItemCategoriaNavigation.Categoria
+        }
+    }).ToList();
+}
+
+@section Scripts {
+    <script>
+        var inventarioCache = @Json.Serialize(inventarioSimple);
+
+        function cargarDetalle(id) {
+            $.get('/Inventario/Details/' + id, function (data) {
+                $('#detalleInventario').html(data);
+            });
+        }
+
+        $(document).ready(function () {
+            var primerId = @((Model.FirstOrDefault()?.IdItem ?? 0));
+            if (primerId > 0) {
+                cargarDetalle(primerId);
+            }
+        });
+
+        function actualizarTabla(inventario) {
+            var tbody = $('table tbody');
+            tbody.empty();
+
+            if (inventario.length === 0) {
+                tbody.append('<tr><td colspan="5" class="text-center">No se encontraron resultados</td></tr>');
+                return;
+            }
+
+            inventario.forEach(function (item) {
+                var tr = $('<tr>');
+                tr.append($('<td>').text(item.itemNombre));
+                tr.append($('<td>').text(item.stock));
+                tr.append($('<td>').text(item.unidadMedida));
+
+                var estadoTd = $('<td>');
+                if (item.stock <= item.nivelReorden) {
+                    estadoTd.html('<span class="badge bg-warning text-dark">Bajo Stock</span>');
+                } else {
+                    estadoTd.html('<span class="badge bg-success">En Stock</span>');
+                }
+                tr.append(estadoTd);
+
+                // MODIFICACIÓN: Se generan los botones con el nuevo estilo
+                var acciones = $('<td>').html(
+                    `<a href="/Inventario/Edit/${item.idItem}" class="btn btn-sm btn-info" title="Editar"><i class="fas fa-pencil-alt"></i></a> ` +
+                    `<a href="javascript:void(0);" onclick="cargarDetalle(${item.idItem})" class="btn btn-sm btn-secondary" title="Ver Detalles"><i class="fas fa-info-circle"></i></a> ` +
+                    `<a href="/Inventario/Delete/${item.idItem}" class="btn btn-sm btn-danger" title="Eliminar"><i class="fas fa-trash-alt"></i></a>`
+                );
+                tr.append(acciones);
+
+                tbody.append(tr);
+            });
+        }
+
+        var timeoutId;
+        $('#searchInput').on('input', function () {
+            clearTimeout(timeoutId);
+            var searchTerm = $(this).val().toLowerCase();
+
+            if (searchTerm.length === 0) {
+                 actualizarTabla(inventarioCache);
+            } else if (searchTerm.length < 3) {
+                var resultados = inventarioCache.filter(i =>
+                    i.itemNombre.toLowerCase().includes(searchTerm) ||
+                    (i.unidadMedida && i.unidadMedida.toLowerCase().includes(searchTerm)) ||
+                    (i.idItemCategoriaNavigation && i.idItemCategoriaNavigation.categoria.toLowerCase().includes(searchTerm))
+                );
+                actualizarTabla(resultados);
+            } else {
+                timeoutId = setTimeout(function () {
+                    $.get('/Inventario/Buscar', { searchTerm: searchTerm })
+                        .done(function (data) {
+                            actualizarTabla(data);
+                        });
+                }, 300);
+            }
+        });
+    </script>
+}
